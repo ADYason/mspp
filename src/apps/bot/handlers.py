@@ -152,24 +152,20 @@ async def read_new_fund_form(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
 
 async def country(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    from .models import CoverageArea
-
     await update.callback_query.answer()
-    country_buttons = [
-        # TODO: добавить пагинацию
-        [
-            InlineKeyboardButton("Далее", callback_data="next"),
-            InlineKeyboardButton("Назад", callback_data="prev"),
-        ],
-        [InlineKeyboardButton("Другая страна", callback_data="no_fund")],
-    ]
-    async for country in CoverageArea.objects._mptt_filter(level=0):
-        if country.name == "Россия":
-            continue
-        country_buttons.insert(0, [InlineKeyboardButton(country.name, callback_data=country.name)])
     await update.callback_query.edit_message_text(
         "Выбери страну",
-        reply_markup=InlineKeyboardMarkup(country_buttons),
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [InlineKeyboardButton("Казахстан", callback_data="Казахстан")],
+                # TODO: добавить пагинацию
+                [
+                    InlineKeyboardButton("Далее", callback_data="next"),
+                    InlineKeyboardButton("Назад", callback_data="prev"),
+                ],
+                [InlineKeyboardButton("Другая страна", callback_data="no_fund")],
+            ]
+        ),
     )
     return COUNTRY
 
