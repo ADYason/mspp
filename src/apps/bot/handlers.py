@@ -79,7 +79,9 @@ async def location(update: Update, context: ContextTypes.DEFAULT_TYPE):
         [InlineKeyboardButton("Другой город", callback_data="other_city")],
         [InlineKeyboardButton("Я не в России", callback_data="other_country")],
     ]
-    async for region in CoverageArea.objects._mptt_filter(level=1):
+    async for region in CoverageArea.objects._mptt_filter(level=0):
+        if region.name in ("Россия", "Казахстан"):
+            continue
         regions_buttons.insert(0, [InlineKeyboardButton(region.name, callback_data=region.name)])
     keyboard = InlineKeyboardMarkup(regions_buttons)
     if update.message:
